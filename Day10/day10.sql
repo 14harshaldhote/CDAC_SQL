@@ -76,4 +76,9 @@ delimiter ;
 select addition(222222222,20);
 
 
+select DAYOFWEEK("2023-12-17");
 
+delimiter //
+create procedure datea()
+
+delimiter ;

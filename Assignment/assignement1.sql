@@ -31,8 +31,17 @@ VALUES
 
 
 -- Write a query that will display all the Post Office records of a State. Display the address of Post Office in a same city.
-#select po_address from post_office where po_city=po_city;
-SELECT po_name AS PostOfficeName, po_state AS State FROM Post_Office;
+select * from post_office;
+
+select po_pincode,po_address,po_city from post_office where po_city=(select po_city from post_office group by po_city order by count(po_city) desc limit 1);
+
+
+
+
+select po_address from post_office where count(po_city);
+
+
+SELECT po_address AS PostOfficeAddress,po_city FROM Post_Office where po_state="MH";
 SELECT
     po_id AS OfficeID,
     po_name AS OfficeName,
@@ -49,7 +58,10 @@ SELECT
 FROM Post_Office
 ORDER BY po_state, po_city, po_name;
 
+
 -- .In which city having maximum number of post office,show the pincodes of those cities.
+select po_pincode,po_city from post_office where po_city=(select min(distinct po_city)from post_office);
+
 SELECT po_city AS City, GROUP_CONCAT(po_pincode) AS Pincodes
 FROM Post_Office
 WHERE po_city = (
@@ -63,6 +75,8 @@ GROUP BY po_city;
 
 
 --  Create a store procedure that receives the first name of the person table as input and the last name as output;
+
+
 select *from employee;
 delimiter //
 
@@ -95,7 +109,8 @@ delimiter ;
 
 call SPCountAllEmployee();
 
--- 
+
+
 
 delimiter //
 
@@ -139,4 +154,71 @@ DELIMITER ;
 CALL AssignGrade(85, @grade);
 SELECT @grade;
 
--- 
+--  Write a MySQL stored procedure that uses a loop to iterate through a list of numbers from 1 to 20.
+delimiter //
+create procedure list3()
+begin
+	declare a int ;
+    declare str varchar(100) default '' ;
+    set str='';
+    set a=0;
+    while a<=20 do 
+    set a=a+1;
+    set str = concat(str,a, ',');
+    end while;
+    select str ;
+end //
+delimiter ;
+
+call list3();
+    
+-- Create a stored procedure named CalculateFactorial that accepts a single integer parameter, n.Inside the procedure, use a loop to calculate the factorial of n.
+delimiter //
+create procedure CalculateFactorial (n INT)
+begin
+    declare fact bigint default 1;
+    declare i int default 1;
+
+    while i <= n do
+        set fact = fact * i;
+        set i = i + 1;
+    end while;
+
+    select fact as Factorial;
+end //
+delimiter ;
+
+call CalculateFactorial (10);
+
+-- GenerateFibonacciSequence 
+
+DELIMITER //
+CREATE PROCEDURE GenerateFibonacciSequence (IN n INT)
+BEGIN
+    DECLARE fib1 INT DEFAULT 0;
+    DECLARE fib2 INT DEFAULT 1;
+    DECLARE fib INT;
+
+    IF n >= 1 THEN
+        SELECT fib1 AS FibonacciTerm;
+    END IF;
+
+    IF n >= 2 THEN
+        SELECT fib2 AS FibonacciTerm;
+    END IF;
+
+    SET n = n - 2;
+
+    WHILE n > 0 DO
+        SET fib = fib1 + fib2;
+        SET fib1 = fib2;
+        SET fib2 = fib;
+
+        SELECT fib AS FibonacciTerm;
+
+        SET n = n - 1;
+    END WHILE;
+END //
+DELIMITER ;
+
+CALL GenerateFibonacciSequence(10);
