@@ -233,3 +233,6 @@ select * from table_id2;
 create temporary table table_id3 select EnrolNumber ,CollegeName from CollegeStudents;
 desc table_id3;
 select * from table_id3;
+
+
+select * from employee;
